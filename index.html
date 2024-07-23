@@ -7,26 +7,53 @@
     <title>SCANNER APP</title>
 </head>
 <body>
-    <script src="./qr.js"></script>
-    <div style="text-align: center;">
+    <!-- <div style="text-align: center;">
 
         <div id="reader" style="width: 500px;"></div>
         <div id="show" style="display: none;">
             <h4>Scanned Result</h4>
             <p style="color: blue;" id="result"></p>
-        </div>
+        </div> -->
+        <div id="resultado"></div>
+        <div id="camara"></div>
     </div>
+    <script src="./quagga.min.js"></script>
     <script>
-        const html5Qrcode = new Html5Qrcode('reader');
-        const qrCodeSuccessCallback = (decodedText, decodedResult)=>{
-            if(decodedText){
-                document.getElementById('show').style.display = 'block';
-                document.getElementById('result').textContent = decodedText;
-                html5Qrcode.stop();
-            }
-        }
-        const config = {fps:10, qrbox:{width:250, height:250}}
-        html5Qrcode.start({facingMode:"environment"}, config,qrCodeSuccessCallback );
+        // const html5Qrcode = new Html5Qrcode('reader');
+        // const qrCodeSuccessCallback = (decodedText, decodedResult)=>{
+            //     if(decodedText){
+        //         document.getElementById('show').style.display = 'block';
+        //         document.getElementById('result').textContent = decodedText;
+        //         html5Qrcode.stop();
+        //     }
+        // }
+        // const config = {fps:10, qrbox:{width:250, height:250}}
+        // html5Qrcode.start({facingMode:"environment"}, config,qrCodeSuccessCallback );
+
+
+
+        Quagga.init({
+    inputStream : {
+      name : "Live",
+      type : "LiveStream",
+      target: document.querySelector('#camara')    // Or '#yourElement' (optional)
+    },
+    decoder : {
+      readers : ["code_128_reader"]
+    }
+  }, function(err) {
+      if (err) {
+          console.log(err);
+          return
+      }
+      console.log("Initialization finished. Ready to start");
+      Quagga.start();
+  });
+  Quagga.onDetected(function(data){
+    console.log(data);
+    document.querySelector("#resultado").innerHTML = data.codeResult.code
+  });
+
     </script>
     
 </body>
